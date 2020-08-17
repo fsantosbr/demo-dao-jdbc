@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.DB;
 import db.DbException;
@@ -104,6 +107,61 @@ public class SellerDaoJDBC implements SellerDao {
 	public List<Seller> findAll() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public List<Seller> findByDepartment(Department department) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"SELECT seller.*,department.Name as DepName "
+					+ "FROM seller INNER JOIN department "
+					+ "ON seller.DepartmentId = department.Id "
+					+ "WHERE DepartmentId = ? "
+					+ "ORDER BY Name");					
+					
+			
+			st.setInt(1, department.getId());
+				// st.setInt(index, value) = we replace with position of the "?" and the real value expected in the .prepareStatement() method
+			
+			rs = st.executeQuery();
+				// The st (ResultSet) will return a table with the information
+			
+			// after making the request.. we need to pass the information to classes (because we're working with object oriented)
+			
+			List<Seller> list = new ArrayList<>();
+			Map<Integer, Department> map = new HashMap<>();
+				// we're using Map to avoid repetitions for Department classes. Remember, Map doesn't allow repetition values
+				// The key will be the department id. And the value will be the Department class
+			
+			while (rs.next()) {				
+				Department dep = map.get(rs.getInt("DepartmentId"));
+				// "rs.getInt("DepartmentId")" will bring an int value from the ResultSet as an arg to the .get() method for map
+				// As there's nothing in the map yet, the dep variable will be null (won't receive a value).
+				
+				if (dep == null) {
+					dep = instantiateDepartment(rs);
+					map.put(rs.getInt("DepartmentId"), dep);
+					// .put(hey, value) will add a value in the Map
+				}
+				
+				Seller obj = instantiateSeller(rs, dep);				
+				list.add(obj);
+				
+			}
+			return list;
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+			// we do not close the database connection here because we can use the connection in another method
+		}
 	}
 
 	

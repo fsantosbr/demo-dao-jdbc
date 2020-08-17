@@ -2,6 +2,7 @@ package model.dao;
 
 import java.util.List;
 
+import model.entities.Department;
 import model.entities.Seller;
 
 public interface SellerDao {
@@ -11,5 +12,7 @@ public interface SellerDao {
 	void deleteById(Integer id); // Operation responsible for deleting something in the database by an id	
 	Seller findById(Integer id); // Operation responsible for searching in the database with this id and if it exist, return a Seller obj, if not exist, return null
 	List<Seller> findAll(); // Operation responsible for returning all sellers in the database
+	List<Seller> findByDepartment(Department department); //Operation responsible for searching in the database with this department. Will return a list of Seller
+	
 	
 }
