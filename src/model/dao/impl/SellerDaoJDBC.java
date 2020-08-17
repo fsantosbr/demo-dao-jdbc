@@ -59,22 +59,12 @@ public class SellerDaoJDBC implements SellerDao {
 			// The st (ResultSet) will return a table with the information
 			// after making the request.. we need to pass the information to classes (because we're working with object oriented)
 			
-			// testing if came some result. If yes, Instantiated the classes, If not, return null (there's no result for the id).
-			if (rs.next()) {
-				
-				Department dep = new Department();
-				dep.setId(rs.getInt("DepartmentId")); // 'rs.getInt("DepartmentId")' gets an integer data (id), from the result stored in the rs by the field name "DepartmentId".
-				dep.setName(rs.getString("depName")); // 'rs.getString("depName")' gets an String data (Name), from the result stored in the rs by the field name (nickname) "depName".
-				
-				Seller obj = new Seller();
-				obj.setId(rs.getInt("Id"));
-				obj.setName(rs.getString("Name"));
-				obj.setEmail(rs.getString("Email"));
-				obj.setBirthDate(rs.getDate("BirthDate"));
-				obj.setBaseSalary(rs.getDouble("BaseSalary"));
-				obj.setDepartment(dep);
-				
+			// testing if came some result. If yes, Instantiate the classes, If not, return null (there's no result for the id).
+			if (rs.next()) {				
+				Department dep = instantiateDepartment(rs);
+				Seller obj = instantiateSeller(rs, dep);				
 				return obj;
+				
 			}
 			return null;
 		}
@@ -88,6 +78,28 @@ public class SellerDaoJDBC implements SellerDao {
 		}
 	}
 
+	
+	
+	private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
+		Seller obj = new Seller();
+		obj.setId(rs.getInt("Id")); // 'rs.getInt("Id")' gets an integer data (id), from the result stored in the rs by the field name "Id".
+		obj.setName(rs.getString("Name"));
+		obj.setEmail(rs.getString("Email"));
+		obj.setBirthDate(rs.getDate("BirthDate"));
+		obj.setBaseSalary(rs.getDouble("BaseSalary"));
+		obj.setDepartment(dep);
+		return obj;
+	}
+
+
+	private Department instantiateDepartment(ResultSet rs) throws SQLException {		
+		Department dep = new Department();
+		dep.setId(rs.getInt("DepartmentId")); // 'rs.getInt("DepartmentId")' gets an integer data (id), from the result stored in the rs by the field name "DepartmentId".
+		dep.setName(rs.getString("depName")); // 'rs.getString("depName")' gets an String data (Name), from the result stored in the rs by the field name (nickname) "depName".
+		return dep;
+	}
+	
+	
 	@Override
 	public List<Seller> findAll() {
 		// TODO Auto-generated method stub
