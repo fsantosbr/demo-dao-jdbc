@@ -27,8 +27,7 @@ public class Program {
 			System.out.println(obj);
 		}
 
-		
-		
+				
 		System.out.println("\n==== TEST 3: seller findAll =====");
 		list = sellerDao.findAll();
 		for (Seller obj : list) {
@@ -43,6 +42,11 @@ public class Program {
 		
 		
 		
+		System.out.println("\n==== TEST 5: seller update =====");
+		seller = sellerDao.findById(1); // we're taking a seller
+		seller.setName("Marta Waine"); // setting a new name
+		sellerDao.update(seller); // calling the update() method
+		System.out.println("Update completed");
 		
 	}
 
