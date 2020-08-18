@@ -1,6 +1,6 @@
 package application;
 
-import java.util.Date;
+// import java.util.Date;
 import java.util.List;
 
 import model.dao.DaoFactory;
@@ -8,7 +8,7 @@ import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
 
-public class Program {
+public class Program1 {
 
 	public static void main(String[] args) {
 		
@@ -56,10 +56,8 @@ public class Program {
 		*/
 		
 		System.out.println("\n==== TEST 6: seller delete =====");
-		
-		//Seller seller2 = new Seller(id, name, email, birthDate, baseSalary, department)
 		sellerDao.deleteById(12);
-		
+		System.out.println("Delete completed!");
 	}
 
 }
