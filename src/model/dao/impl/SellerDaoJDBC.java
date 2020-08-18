@@ -49,7 +49,6 @@ public class SellerDaoJDBC implements SellerDao {
 			st.setInt(5, obj.getDepartment().getId());
 			
 			int rowsAffected = st.executeUpdate();
-			
 			if (rowsAffected > 0) {
 				ResultSet rs = st.getGeneratedKeys();
 				if (rs.next()) {
@@ -104,7 +103,20 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");
+			st.setInt(1, id);
+			st.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+			// we do not close the database connection here because we can use the connection in another method
+		}
+		
 		
 	}
 
